@@ -1,0 +1,9 @@
+﻿namespace Kros_aplication.Dto
+{
+    public class FirmDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = null!;
+        //public int IdManager { get; set; }
+    }
+}
