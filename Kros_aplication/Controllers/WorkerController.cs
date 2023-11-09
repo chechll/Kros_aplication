@@ -117,7 +117,7 @@ namespace Kros_aplication.Controllers
 
             if (!_workerRepository.UpdateWorker(workerMap))
             {
-                ModelState.AddModelError("", "Something went wrong updating owner");
+                ModelState.AddModelError("", "Something went wrong ");
                 return StatusCode(500, ModelState);
             }
 
@@ -149,7 +149,7 @@ namespace Kros_aplication.Controllers
 
             if (!_workerRepository.DeleteWorker(workerToDelete))
             {
-                ModelState.AddModelError("", "Something went wrong deleting owner");
+                ModelState.AddModelError("", "Something went wrong ");
                 return StatusCode(500, ModelState);
             }
 

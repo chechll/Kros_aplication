@@ -198,7 +198,7 @@ namespace Kros_aplication.Controllers
 
             if (!_projectRepository.UpdateProject(projectMap))
             {
-                ModelState.AddModelError("", "Something went wrong updating owner");
+                ModelState.AddModelError("", "Something went wrong ");
                 return StatusCode(500, ModelState);
             }
 
@@ -219,19 +219,20 @@ namespace Kros_aplication.Controllers
             var projectToDelete = _projectRepository.GetProject(projectId);
             var departmentsToDelete = _departmentRepository.GetDepartmentsByProjectId(projectId).ToList();
 
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            if (!_departmentRepository.DeleteDepartments(departmentsToDelete))
+            if (departmentsToDelete.Count != 0)
             {
-                ModelState.AddModelError("", "Something went wrong deleting owner");
-                return StatusCode(500, ModelState);
-            }
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
 
+                if (!_departmentRepository.DeleteDepartments(departmentsToDelete))
+                {
+                    ModelState.AddModelError("", "Something went wrong");
+                    return StatusCode(500, ModelState);
+                }
+            }
             if (!_projectRepository.DeleteProject(projectToDelete))
             {
-                ModelState.AddModelError("", "Something went wrong deleting owner");
+                ModelState.AddModelError("", "Something went wrong");
                 return StatusCode(500, ModelState);
             }
 

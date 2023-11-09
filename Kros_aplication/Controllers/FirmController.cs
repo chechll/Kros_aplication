@@ -173,7 +173,7 @@ namespace Kros_aplication.Controllers
 
             if (!_firmRepository.UpdateFirm(firmMap))
             {
-                ModelState.AddModelError("", "Something went wrong updating owner");
+                ModelState.AddModelError("", "Something went wrong ");
                 return StatusCode(500, ModelState);
             }
 
@@ -194,39 +194,48 @@ namespace Kros_aplication.Controllers
             var firmToDelete = _firmRepository.GetFirm(firmId);
             var divisionsToDelete = _dividionRepository.GetDivisionsByFirmId(firmId).ToList();
 
-            foreach (var division in divisionsToDelete)
+            if (divisionsToDelete.Count != 0)
             {
-                var projectsToDelete = _projectRepository.GetProjectsByDivisiontId(division.Id).ToList();
 
-                foreach (var project in projectsToDelete)
+                foreach (var division in divisionsToDelete)
                 {
-                    var departmentsToDelete = _departmentRepository.GetDepartmentsByProjectId(project.Id).ToList();
-                    if (!_departmentRepository.DeleteDepartments(departmentsToDelete))
+                    var projectsToDelete = _projectRepository.GetProjectsByDivisiontId(division.Id).ToList();
+
+                    if (projectsToDelete.Count != 0)
                     {
-                        ModelState.AddModelError("", "Something went wrong deleting owner");
-                        return StatusCode(500, ModelState);
+                        foreach (var project in projectsToDelete)
+                        {
+                            var departmentsToDelete = _departmentRepository.GetDepartmentsByProjectId(project.Id).ToList();
+                            if (departmentsToDelete.Count != 0)
+                            {
+                                if (!_departmentRepository.DeleteDepartments(departmentsToDelete))
+                                {
+                                    ModelState.AddModelError("", "Something went wrong");
+                                    return StatusCode(500, ModelState);
+                                }
+                            }
+                        }
+                        if (!_projectRepository.DeleteProjects(projectsToDelete))
+                        {
+                            ModelState.AddModelError("", "Something went wrong");
+                            return StatusCode(500, ModelState);
+                        }
                     }
                 }
-                if (!_projectRepository.DeleteProjects(projectsToDelete))
+
+
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                if (!_dividionRepository.DeleteDivision(divisionsToDelete))
                 {
-                    ModelState.AddModelError("", "Something went wrong deleting owner");
+                    ModelState.AddModelError("", "Something went wrong");
                     return StatusCode(500, ModelState);
                 }
             }
-
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            if (!_dividionRepository.DeleteDivision(divisionsToDelete))
-            {
-                ModelState.AddModelError("", "Something went wrong deleting owner");
-                return StatusCode(500, ModelState);
-            }
-
             if (!_firmRepository.DeleteFirm(firmToDelete))
             {
-                ModelState.AddModelError("", "Something went wrong deleting owner");
+                ModelState.AddModelError("", "Something went wrong");
                 return StatusCode(500, ModelState);
             }
 
