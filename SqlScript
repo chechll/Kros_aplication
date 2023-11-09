@@ -1,0 +1,82 @@
+CREATE TABLE Department
+(
+	id                   INTEGER IDENTITY(1,1) NOT NULL ,
+	name                 VARCHAR(20)  NOT NULL ,
+	id_manager           INTEGER  NOT NULL ,
+	project_id          INTEGER  NOT NULL 
+);
+
+ALTER TABLE Department
+	ADD CONSTRAINT  XPKdepartment PRIMARY KEY (id);
+
+CREATE TABLE Worker
+(
+	id                   INTEGER IDENTITY(1,1) NOT NULL ,
+	Name                 VARCHAR(20)  NOT NULL ,
+	Surname              VARCHAR(20)  NOT NULL ,
+	PhoneNumber          INTEGER  NULL ,
+	email                VARCHAR(20)  NULL ,
+	title                VARCHAR(20)  NULL 
+);
+
+ALTER TABLE Worker
+	ADD CONSTRAINT  XPKWorker PRIMARY KEY (id);
+
+CREATE TABLE Project
+(
+	id                   INTEGER IDENTITY(1,1) NOT NULL ,
+	name                 VARCHAR(20)  NOT NULL ,
+	id_manager           INTEGER  NOT NULL ,
+	division_id           INTEGER  NOT NULL 
+);
+
+ALTER TABLE Project
+	ADD CONSTRAINT  XPKProject PRIMARY KEY (id);
+
+CREATE TABLE Firm
+(
+	id                   INTEGER IDENTITY(1,1) NOT NULL ,
+	name                 VARCHAR(20)  NOT NULL ,
+	id_manager           INTEGER  NOT NULL 
+);
+
+ALTER TABLE Firm
+	ADD CONSTRAINT  XPKFirm PRIMARY KEY (id);
+
+CREATE TABLE Division
+(
+	id                   INTEGER IDENTITY(1,1) NOT NULL ,
+	name                 VARCHAR(20)  NOT NULL ,
+	id_manager           INTEGER NOT NULL ,
+	firm_id              INTEGER  NOT NULL 
+);
+
+ALTER TABLE Division
+	ADD CONSTRAINT  XPKDivision PRIMARY KEY (id);
+
+ALTER TABLE Department
+	ADD
+CONSTRAINT R_4 FOREIGN KEY(id_manager) REFERENCES Worker (id);
+
+ALTER TABLE Department
+	ADD 
+CONSTRAINT R_6 FOREIGN KEY (project_id) REFERENCES Project (id);
+
+ALTER TABLE Project
+	ADD 
+CONSTRAINT R_3 FOREIGN KEY (id_manager) REFERENCES Worker (id);
+
+ALTER TABLE Project
+	ADD CONSTRAINT R_7 FOREIGN KEY (division_id) REFERENCES Division (id);
+
+ALTER TABLE Firm
+	ADD
+CONSTRAINT R_1 FOREIGN KEY (id_manager) REFERENCES Worker (id);
+
+ALTER TABLE Division
+	ADD
+CONSTRAINT R_2 FOREIGN KEY (id_manager) REFERENCES Worker (id);
+
+ALTER TABLE Division
+	ADD 
+CONSTRAINT R_5 FOREIGN KEY (firm_id) REFERENCES Firm (id);
